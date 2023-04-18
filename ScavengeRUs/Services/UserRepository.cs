@@ -237,6 +237,12 @@ namespace ScavengeRUs.Services
                     "Welcome to the ETSU Scavenger Hunt!", 
                     $"Hi {user.FirstName} {user.LastName} welcome to the ETSU Scavenger Hunt game! " +
                     $"To get started please go to {serverUrl} and login with the access code: {user.PhoneNumber}/{hunt.HuntName}");
+
+                await _functions.SendEmail(
+                     $"{user.PhoneNumber}@txt.att.net",
+                    "Test For Text Message Utility",
+                    $"Hi {user.FirstName} {user.LastName} welcome to the ETSU Scavenger Hunt game! " +
+                    $"To get started please go to {serverUrl} and login with the access code: {user.PhoneNumber}/{hunt.HuntName}");
             }
             _db.ApplicationUsers.AddRange(users);
             await _db.SaveChangesAsync();
