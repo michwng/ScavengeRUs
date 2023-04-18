@@ -158,9 +158,29 @@ namespace ScavengeRUs.Controllers
         {
             filePath = "Services/Users.csv";
             serverUrl = $"{Request.Scheme}://{Request.Host}";
-            await _userRepo.CreateUsers(filePath, serverUrl);
+            var (users, existingUsers) = await _userRepo.CreateUsers(filePath, serverUrl);
+            //await _userRepo.CreateUsers(filePath, serverUrl);
 
-            
+
+            var messages = new List<string>();
+            int numCreatedUsers = 0;
+
+            foreach (var user in users)
+            {
+                numCreatedUsers++;
+                messages.Add($"You have successfully created the user: {user.UserName}");
+            }
+
+            foreach (var user in existingUsers)
+            {
+                messages.Add($"We did not create the user: {user.UserName} because they already exist");
+            }
+
+            messages.Add($"Total number of users created: {numCreatedUsers}");
+
+            TempData["messages"] = messages;
+
+            //Console.WriteLine(string.Join(",", messages));
 
             // Redirect to the Index action of the UsersController
             return RedirectToAction("Manage");
