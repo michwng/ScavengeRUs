@@ -180,11 +180,10 @@ if (sideBarClose !== null) {
 }
 
 
-(function _homeIndexMain() {        //This function handles the modal on the hunt page
+function _homeIndexMain() {        //This function handles the modal on the hunt page
     const createTaskModalDOM = document.querySelector("#createTaskModal");
-    if (createTaskModalDOM !== null) {
-        const createTaskModal = new bootstrap.Modal(createTaskModalDOM);
-    }
+    const createTaskModal = new bootstrap.Modal(createTaskModalDOM);
+    
     
     const createTaskButton = document.querySelectorAll("#btnCreateTask");
  //   console.log(createTaskButton);
@@ -242,4 +241,4 @@ if (sideBarClose !== null) {
         });
         event.preventDefault();
     });
-}());
+};
