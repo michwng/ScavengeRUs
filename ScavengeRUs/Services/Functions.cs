@@ -25,9 +25,6 @@ public class Functions
         // Use the Secret Manager API to get the email password
         string password = GetSecretAsync("etsuscavengerhuntemail").Result;
 
-        Console.WriteLine(emailFrom);
-        Console.WriteLine(password);
-
         // Configure SMTP client
         SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
         client.EnableSsl = true;
