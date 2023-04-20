@@ -13,6 +13,6 @@ namespace ScavengeRUs.Services
         Task AssignUserToRoleAsync(string userName, string roleName);
         Task AddUserToHunt(string username, Hunt hunt);
         Task<ApplicationUser> FindByAccessCode(string accessCode);
-        Task<List<ApplicationUser>> CreateUsers(string? filePath, string? serverUrl);
+        Task<(List<ApplicationUser> users, List<ApplicationUser> existingUsers)> CreateUsers(string? filePath, string? serverUrl);
     }
 }

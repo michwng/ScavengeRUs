@@ -156,11 +156,11 @@ namespace ScavengeRUs.Controllers
 
         public async Task<IActionResult> CreateUsers(string? filePath, string? serverUrl)
         {
+            
             filePath = "Services/Users.csv";
             serverUrl = $"{Request.Scheme}://{Request.Host}";
             var (users, existingUsers) = await _userRepo.CreateUsers(filePath, serverUrl);
             //await _userRepo.CreateUsers(filePath, serverUrl);
-
 
             var messages = new List<string>();
             int numCreatedUsers = 0;
@@ -176,7 +176,9 @@ namespace ScavengeRUs.Controllers
                 messages.Add($"We did not create the user: {user.UserName} because they already exist");
             }
 
+
             messages.Add($"Total number of users created: {numCreatedUsers}");
+
 
             TempData["messages"] = messages;
 

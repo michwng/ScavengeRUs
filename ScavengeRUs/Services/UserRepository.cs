@@ -194,7 +194,7 @@ namespace ScavengeRUs.Services
             return user!;
         }
 
-        public async Task<List<ApplicationUser>> CreateUsers(string? filePath, string? serverUrl)
+        public async Task<(List<ApplicationUser> users, List<ApplicationUser> existingUsers)> CreateUsers(string? filePath, string? serverUrl)
         {
             var users = new List<ApplicationUser>();
             // Get the path of the CSV file in the immediate folder
@@ -202,6 +202,7 @@ namespace ScavengeRUs.Services
 
             // Read the CSV file
             string[] csvLines = System.IO.File.ReadAllLines(filePath);
+            var existingUsers = new List<ApplicationUser>();
 
             // Loop through each line in the CSV file and create a new user
             for (int i = 1; i < csvLines.Length; i++)
@@ -209,38 +210,52 @@ namespace ScavengeRUs.Services
                 // Split the CSV line into an array of values
                 string[] values = csvLines[i].Split(',');
 
-                // Create a new user with the values from the CSV line
-                var user = new ApplicationUser
+                // Check to see if the user is created first
+                try
                 {
-                    FirstName = values[0],
-                    LastName = values[1],
-                    Roles = new List<string>(),
-                    Carrier = Enum.Parse<Carriers>(values[4]),
-                    UserName = values[3],
-                    Email = values[3],
-                    PhoneNumber = values[2],
-                };
+                    var existingUser = await ReadAsync(values[3]);
+                    if (existingUser != null)
+                    {
+                        existingUsers.Add(existingUser);
+                    }
+                    else
+                    {
+                        // Create a new user with the values from the CSV line
+                        var user = new ApplicationUser
+                        {
+                            FirstName = values[0],
+                            LastName = values[1],
+                            Roles = new List<string>(),
+                            Carrier = Enum.Parse<Carriers>(values[4]),
+                            UserName = values[3],
+                            Email = values[3],
+                            PhoneNumber = values[2],
+                        };
 
-                // Find the role by its ID
-                var roleName = "Player";
-                var role = await _roleManager.FindByNameAsync(roleName);
-                var userRole = new IdentityUserRole<string> { UserId = user.Id, RoleId = role.Id };
-                await _db.UserRoles.AddAsync(userRole);
-                var hunt = await _db.Hunts.FindAsync(14);
-                user.Hunt = hunt;
-                users.Add(user);
-                var accessCode = $"{user.PhoneNumber}/{hunt.HuntName}";
-                var userAccessCode = new AccessCode { Code = accessCode, HuntId = hunt.Id };
-                user.AccessCode = userAccessCode;
-                await _functions.SendEmail(
-                    user.Email, 
-                    "Welcome to the ETSU Scavenger Hunt!", 
-                    $"Hi {user.FirstName} {user.LastName} welcome to the ETSU Scavenger Hunt game! " +
-                    $"To get started please go to {serverUrl} and login with the access code: {user.PhoneNumber}/{hunt.HuntName}");
+                        // Find the role by its ID
+                        var roleName = "Player";
+                        var role = await _roleManager.FindByNameAsync(roleName);
+                        var userRole = new IdentityUserRole<string> { UserId = user.Id, RoleId = role.Id };
+                        await _db.UserRoles.AddAsync(userRole);
+                        var hunt = await _db.Hunts.FindAsync(14);
+                        user.Hunt = hunt;
+                        users.Add(user);
+                        var accessCode = $"{user.PhoneNumber}/{hunt.HuntName}";
+                        var userAccessCode = new AccessCode { Code = accessCode, HuntId = hunt.Id };
+                        user.AccessCode = userAccessCode;
+                        await _functions.SendEmail(
+                            user.Email,
+                            "Welcome to the ETSU Scavenger Hunt!",
+                            $"Hi {user.FirstName} {user.LastName} welcome to the ETSU Scavenger Hunt game! " +
+                            $"To get started please go to {serverUrl} and login with the access code: {user.PhoneNumber}/{hunt.HuntName}");
+                    }
+                } catch (Exception e) {
+                    Console.WriteLine(e);
+                }
             }
             _db.ApplicationUsers.AddRange(users);
             await _db.SaveChangesAsync();
-            return users;
+            return (users, existingUsers);
 
         }
     }

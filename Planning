@@ -79,22 +79,27 @@ Tasks:
   Functionality to send specific users access codes 
 
   
+
 Secondary Objective Options
   Test submission status for when a player completes a task
       Correct entry ✓
       Incorrect entry ✓
       No internet
+
       Server/database update on correct entry ✓
       Actually shows the update to the user ✓
       Verify that the user cannot complete the same task multiple times ✓
   Not being able to delete a hunt once it has started (Remove functionality) 
   Test that the current solution changes status automatically ✓
+
   A.3.a Can only edit pending or active hunts
     * Verify that you cannot edit completed hunts
     * Remove ability to edit completed hunt
   A.2.c Custom Invitations
   A.2.f Hunt URLs
+
   A.4.d Access Code and Invitation sending ✓
+
   Figure out how to get the current solution onto the VM 
   Deploy the solution to the VM 
   Show everyone how to connect to it 
