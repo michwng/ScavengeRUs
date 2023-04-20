@@ -4,11 +4,23 @@
     ViewData["Title"] = "Admin Portal";
     string? roles = null;
 }
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
 
 <h1>Active Users</h1>
 
 <p>
     <a asp-action="Create" style="padding-left: 3px">Create New User</a> |
+    <span id="createUsers">
+        <a asp-action="CreateUsers" style="padding-left: 3px" id="createUsers">Batch Create Users</a> |
+    </span>
+    
+    <span class="spinner-border text-primary hidden" id="createUsersLoader" role="status">
+      <span class="sr-only">Loading...</span>
+    </span>
     <a asp-area="" asp-controller="Hunt" asp-action="Index" style="padding-right: 3px">Manage Hunts/Tasks</a>
 </p>
 
@@ -18,7 +30,17 @@
         <input type="submit" value="Filter" />
     </p>
 </form>
-
+@if (TempData["messages"] != null)
+{
+    <div class="alert alert-success">
+        <ul>
+            @foreach (var message in ((string[])TempData["messages"]).ToList())
+            {
+                <li>@message</li>
+            }
+        </ul>
+    </div>
+}
 <table class="table">
     <thead>
         <tr>
@@ -37,6 +59,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Hunt)
             </th>
+             <th>
+                @Html.DisplayNameFor(model => model.Carrier)
+            </th>          
             <th></th>
         </tr>
     </thead>
@@ -60,9 +85,19 @@
                 
 
             </td>
-                <td>
+            <td>
+                @if (item.Hunt != null)
+                {
                     @Html.DisplayFor(model => item.Hunt.HuntName)
-                </td>
+                }
+                    
+            </td>
+            <td>
+                @if (item.Carrier != null)
+                {
+                    @Html.DisplayFor(model => item.Carrier)
+                }
+            </td>
             <td>
                     @Html.ActionLink("Edit", "Edit", new { id=item.UserName }) |
                     @Html.ActionLink("Details", "Details", new { id=item.UserName }) |
@@ -72,3 +107,16 @@
 }
     </tbody>
 </table>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $( document ).ready(function() {
+        var createUsers = document.getElementById("createUsers");
+        var createUsersLoader = document.getElementById("createUsersLoader");
+
+        createUsers.addEventListener("click", function() {
+            createUsers.classList.add('hidden');
+            createUsersLoader.classList.remove('hidden');
+        })
+    });
+</script>
+

@@ -162,20 +162,29 @@ function distanceToStringMetric(distInMetres) {
 
 var offcampus = document.getElementById('offcanvas');
 var sideBarOpen = document.getElementById("openSidebar"); //Open sidebar on the hunt page
-sideBarOpen.addEventListener('click', e => {
-    document.getElementById("toggleSidebar").click();
-    document.getElementById("taskarea").style.marginRight = "0px";
-})
+
+if (sideBarOpen !== null) {
+    sideBarOpen.addEventListener('click', e => {
+        document.getElementById("toggleSidebar").click();
+        document.getElementById("taskarea").style.marginRight = "0px";
+    })
+}
+
 
 var sideBarClose = document.getElementById("closeSidebar"); //Close sidebar on hunt page
-sideBarClose.addEventListener('click', e => {
-    document.getElementById("toggleSidebar").click();
-    document.getElementById("taskarea").style.marginRight = "0";
-});
+if (sideBarClose !== null) {
+    sideBarClose.addEventListener('click', e => {
+        document.getElementById("toggleSidebar").click();
+        document.getElementById("taskarea").style.marginRight = "0";
+    });
+}
 
-(function _homeIndexMain() {        //This function handles the modal on the hunt page
+
+function _homeIndexMain() {        //This function handles the modal on the hunt page
     const createTaskModalDOM = document.querySelector("#createTaskModal");
     const createTaskModal = new bootstrap.Modal(createTaskModalDOM);
+    
+    
     const createTaskButton = document.querySelectorAll("#btnCreateTask");
  //   console.log(createTaskButton);
     createTaskButton.forEach(item => {
@@ -232,4 +241,4 @@ sideBarClose.addEventListener('click', e => {
         });
         event.preventDefault();
     });
-}());
+};
