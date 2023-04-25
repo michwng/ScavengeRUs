@@ -240,23 +240,30 @@ namespace ScavengeRUs.Controllers
             }
             
             var tasks = await _huntRepo.GetLocations(hunt.HuntLocations);
-                foreach (var item in tasks)
+            int numTasksCompleted = 0;
+
+            foreach (var item in tasks)
+            {
+                if (currentUser.TasksCompleted.Count() > 0)
                 {
-                    if (currentUser.TasksCompleted.Count() > 0)
+                    var usertask = currentUser.TasksCompleted.FirstOrDefault(a => a.Id == item.Id);
+                    if (usertask != null && tasks.Contains(usertask))
                     {
-                        var usertask = currentUser.TasksCompleted.FirstOrDefault(a => a.Id == item.Id);
-                        if (usertask != null && tasks.Contains(usertask))
-                        {
-                            item.Completed = "Completed";
-                        }
-                    }
-                    else
-                    {
-                        item.Completed = "Not completed";
+                        item.Completed = "Completed";
+                        numTasksCompleted++;
                     }
                 }
+                else
+                {
+                    item.Completed = "Not completed";
+                }
+            }
+            if (currentUser!.Score != numTasksCompleted)
+            {
+                currentUser.Score = numTasksCompleted;
+            }
             return View(tasks);
-            
+
         }
         /// <summary>
         /// This method shows all tasks that can be added to the hunt. Exculding the tasks that are already added

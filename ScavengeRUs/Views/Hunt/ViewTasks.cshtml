@@ -1,9 +1,51 @@
 ﻿@model IEnumerable<ScavengeRUs.Models.Entities.Location>
+@using ScavengeRUs.Models.Entities
 @using Microsoft.AspNetCore.Identity
+@using ScavengeRUs.Services;
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject IUserRepository userRepo
 @{
     var hunt = (Hunt?)ViewData["Hunt"];
     ViewData["Title"] = "View Players of hunt";
 }
+
+@{
+    var user = await userRepo.ReadAsync(User.Identity?.Name!);
+
+    // Create a new dictionary to store the usernames and scores of the current hunt's players
+    Dictionary<string, int> leaderboard = new Dictionary<string, int>();
+    foreach (ApplicationUser player in @hunt!.Players)
+    {
+        leaderboard.Add(player.UserName, player.Score);
+    }
+}
+
+@{
+
+    // Sort the leaderboard dictionary to find the current player's rank
+    int getRank()
+    {
+        int rank = 0;
+        int i = 1;
+        leaderboard = leaderboard.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+        foreach (string username in leaderboard.Keys)
+        {
+            if (username == user!.UserName)
+            {
+                rank = i;
+            }
+            i++;
+        }
+
+        return rank;
+    }
+
+}
+
+
+
+
 @{
     var timeRemaining = (hunt!.EndDate - DateTime.Now).ToString();
     if (TimeSpan.Parse(timeRemaining).Seconds < 0)
@@ -15,7 +57,7 @@
         timeRemaining = timeRemaining.Substring(0, timeRemaining.LastIndexOf("."));
     }
 }
- @*Task Modal*@
+@*Task Modal*@
 <div class="modal fade" id="createTaskModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div id="mainContent" class="modal-content">
@@ -37,11 +79,11 @@
                         <span id="failedMessageArea"></span>
                     </div>
                     <div class="form-group row mb-3">
-                        <label class="col-sm-2 col-form-label" >
+                        <label class="col-sm-2 col-form-label">
                             Question
                         </label>
-                        <div class="col-sm-10 col-form-label" >
-                        <span id="TaskInput"></span>
+                        <div class="col-sm-10 col-form-label">
+                            <span id="TaskInput"></span>
                         </div>
                     </div>
                     <div class="form-group row mb-3">
@@ -157,7 +199,6 @@
 </div>
 
 
-
 @*Sidebar*@
 <button hidden class="btn btn-primary" id="toggleSidebar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasRight">Toggle right offcanvas</button>
 <div class="button left" id="openSidebar">
@@ -174,9 +215,10 @@
 
     <div class="offcanvas-body">
         <p>Total number of tasks: @Model.Count()</p>
-        <p>Players logged in: </p>
+        <p>Players logged in: @hunt.Players.Count</p>
         <p>Players invited: @hunt.Players.Count() </p>
-        <p>Current rank: </p>
+        <p>Current rank: @getRank()</p>
+        <p>Score: @user!.Score</p>
         <p>Time remaining: @timeRemaining</p>
     </div>
 </div>
