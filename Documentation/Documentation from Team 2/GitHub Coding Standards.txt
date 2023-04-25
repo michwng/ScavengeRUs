@@ -1,0 +1,9 @@
+
+Repository will only have two main branches, develop, containing the latest working code, and main containing the current release.
+
+To add code, start a new branch and then issue a pull request to add features into the develop branch, or fork the repository and sync code back in to the develop branch.
+
+Naming examples:
+
+dev-feature-admincreate
+dev-bugfix-complete_button
