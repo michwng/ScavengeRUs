@@ -248,6 +248,27 @@ namespace ScavengeRUs.Services
                             "Welcome to the ETSU Scavenger Hunt!",
                             $"Hi {user.FirstName} {user.LastName} welcome to the ETSU Scavenger Hunt game! " +
                             $"To get started please go to {serverUrl} and login with the access code: {user.PhoneNumber}/{hunt.HuntName}");
+
+
+
+                        //These three email calls send the text messages to the users
+                        //Todo, create a function that converts the css carrier information to the correct.
+
+                        await _functions.SendEmail(
+                             $"{user.PhoneNumber}@txt.att.net",
+                            "Test For Text Message Utility",
+                            $"Hi {user.FirstName} {user.LastName} welcome to the ETSU Scavenger Hunt game! " +
+                            $"To get started please go to {serverUrl} and login with the access code: {user.PhoneNumber}/{hunt.HuntName}");
+                        await _functions.SendEmail(
+                            $"{user.PhoneNumber}@tmomail.net",
+                           "Test For Text Message Utility",
+                           $"Hi {user.FirstName} {user.LastName} welcome to the ETSU Scavenger Hunt game! " +
+                           $"To get started please go to {serverUrl} and login with the access code: {user.PhoneNumber}/{hunt.HuntName}");
+                        await _functions.SendEmail(
+                            $"{user.PhoneNumber}@vtext.com",
+                           "Test For Text Message Utility",
+                           $"Hi {user.FirstName} {user.LastName} welcome to the ETSU Scavenger Hunt game! " +
+                           $"To get started please go to {serverUrl} and login with the access code: {user.PhoneNumber}/{hunt.HuntName}");
                     }
                 } catch (Exception e) {
                     Console.WriteLine(e);
