@@ -1,0 +1,9 @@
+Towards the end of the sprint 3, Team BOB merged with Team Scrum Bums to create Team Bobbums. 
+The Sprint 4 goal was to successfully merge the projects together. The merge was successful, but used up the entire class time in the first half of the sprint.
+
+If your team decides to merge with another team, try doing this before Sprint 3. This way, you have more time to resolve merge conflicts. 
+
+
+This is noted as "Scrum of Scrum" from Mr. Kinser - a common tactic of working on large projects by having teams work on separate parts of the project.
+
+The end result is what you see here. Our teams worked on separate parts of the project. Team BOB was working on improving the hunt functionality, while Team Scrum Bums was focused on improving user and admin experience. We were able to merge both projects together and present a working project to you, the next team.
