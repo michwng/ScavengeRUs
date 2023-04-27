@@ -5,23 +5,20 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserRepository userRepo
+
 @{
     var hunt = (Hunt?)ViewData["Hunt"];
     ViewData["Title"] = "View Players of hunt";
+    var user = await userRepo.ReadAsync(User.Identity?.Name!);
 }
 
-@{
-    var user = await userRepo.ReadAsync(User.Identity?.Name!);
-
+@{  
     // Create a new dictionary to store the usernames and scores of the current hunt's players
     Dictionary<string, int> leaderboard = new Dictionary<string, int>();
     foreach (ApplicationUser player in @hunt!.Players)
     {
         leaderboard.Add(player.UserName, player.Score);
     }
-}
-
-@{
 
     // Sort the leaderboard dictionary to find the current player's rank
     int getRank()
@@ -37,14 +34,9 @@
             }
             i++;
         }
-
         return rank;
     }
-
 }
-
-
-
 
 @{
     var timeRemaining = (hunt!.EndDate - DateTime.Now).ToString();
@@ -57,6 +49,7 @@
         timeRemaining = timeRemaining.Substring(0, timeRemaining.LastIndexOf("."));
     }
 }
+
 @*Task Modal*@
 <div class="modal fade" id="createTaskModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -108,7 +101,6 @@
     </div>
 </div>
 @*Task Modal*@
-
 
 <div id="taskarea">
     <div class="row">
@@ -197,7 +189,6 @@
     </div>
 
 </div>
-
 
 @*Sidebar*@
 <button hidden class="btn btn-primary" id="toggleSidebar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasRight">Toggle right offcanvas</button>
