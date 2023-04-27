@@ -76,7 +76,8 @@ BucHunt-Master
 		appsetting.Development
 			//JSON
 		appsettings
-			//JSON
+			//JSON containing keys and database pathing
+			
 		Program.cs
 			//C# Source file
 			Libraries:
